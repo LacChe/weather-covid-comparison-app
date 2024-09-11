@@ -1,4 +1,3 @@
-import { IonCard, IonCardContent } from '@ionic/react';
 import React from 'react';
 import statesSVG from '../res/usaLow.svg';
 import { ReactSVG } from 'react-svg';
@@ -18,23 +17,23 @@ const StatesMap: React.FC = () => {
   }
 
   return (
-    <IonCard>
-      <IonCardContent className="ion-padding">
-        <ReactSVG
-          afterInjection={(svg) => {
-            setStateColors();
-          }}
-          beforeInjection={(svg) => {
-            svg.setAttribute(
-              'style',
-              `stroke: ${STROKE_COLOR}; stroke-width: ${STROKE_WIDTH}; fill: ${FILL_COLOR}`,
-            );
-            svg.setAttribute('viewBox', '0 0 1150 800');
-          }}
-          src={statesSVG}
-        />
-      </IonCardContent>
-    </IonCard>
+    <ReactSVG
+      afterInjection={(svg) => {
+        setStateColors();
+      }}
+      beforeInjection={(svg) => {
+        svg.setAttribute(
+          'style',
+          `stroke: ${STROKE_COLOR}; stroke-width: ${STROKE_WIDTH}; fill: ${FILL_COLOR}`,
+        );
+        svg.setAttribute('viewBox', '0 0 1150 800');
+      }}
+      style={{
+        maxWidth: '500px',
+        margin: '0 auto',
+      }}
+      src={statesSVG}
+    />
   );
 };
 
