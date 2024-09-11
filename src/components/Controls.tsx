@@ -18,12 +18,14 @@ import React, { useEffect } from 'react';
 import { sectionType } from '../pages/Home';
 
 type ControlsProps = {
+  selectedSection: sectionType;
   setSelectedSection: (section: sectionType) => void;
   date: string;
   setDate: (date: string) => void;
 };
 
 const Controls: React.FC<ControlsProps> = ({
+  selectedSection,
   setSelectedSection,
   date,
   setDate,
@@ -46,16 +48,16 @@ const Controls: React.FC<ControlsProps> = ({
 
   function caseTemperatureToggle() {
     return (
-      <IonSegment value="default">
+      <IonSegment value={selectedSection}>
         <IonSegmentButton
-          onClick={() => setSelectedSection('CASES')}
-          value="CASES"
+          onClick={() => setSelectedSection('Cases')}
+          value="Cases"
         >
           <IonLabel>Cases</IonLabel>
         </IonSegmentButton>
         <IonSegmentButton
-          onClick={() => setSelectedSection('TEMPERATURE')}
-          value="TEMPERATURE"
+          onClick={() => setSelectedSection('Temperature')}
+          value="Temperature"
         >
           <IonLabel>Temperature</IonLabel>
         </IonSegmentButton>

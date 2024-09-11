@@ -7,26 +7,44 @@ import {
 } from '@ionic/react';
 import StatesMap from '../components/StatesMap';
 import Controls from '../components/Controls';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchCases, fetchTemperature } from '../utils/fetchData';
 
-export type sectionType = 'CASES' | 'TEMPERATURE';
+export type sectionType = 'Cases' | 'Temperature';
 
 const Home: React.FC = () => {
-  const [selectedSection, setSelectedSection] = useState<sectionType>('CASES');
+  const [selectedSection, setSelectedSection] = useState<sectionType>('Cases');
   const [date, setDate] = useState<string>('');
+
+  useEffect(() => {
+    async function fetchData() {
+      switch (selectedSection) {
+        case 'Cases':
+          console.log(await fetchCases(date));
+          break;
+        case 'Temperature':
+          fetchTemperature(date);
+          break;
+      }
+    }
+    fetchData();
+  }, [selectedSection, date]);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>
-            {date} {selectedSection} U.S. Weather / Covid Comparison Map
+            {date} U.S.{' '}
+            {selectedSection === 'Cases' ? 'New Covid Cases' : 'Temperature'}{' '}
+            Map
           </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <StatesMap />
         <Controls
+          selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}
           date={date}
           setDate={setDate}
