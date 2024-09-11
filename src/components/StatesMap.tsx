@@ -2,18 +2,45 @@ import React from 'react';
 import statesSVG from '../res/usaLow.svg';
 import { ReactSVG } from 'react-svg';
 
-const StatesMap: React.FC = () => {
+type StatesMapProps = {
+  stateValues: { value: number; state: string; date: string }[];
+};
+
+const StatesMap: React.FC<StatesMapProps> = ({ stateValues }) => {
   const STROKE_COLOR = 'white';
   const STROKE_WIDTH = 3;
-  const FILL_COLOR = 'blue';
+  const FILL_COLOR = 'green';
+  const MAX_VALUE = stateValues.reduce(
+    (max, obj) => (obj.value > max ? obj.value : max),
+    0,
+  );
+
+  function componentToHex(c: number) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
+  }
 
   function setStateColors() {
-    // testing
-    // TODO set color based case or temperature per state
     let paths = document.querySelectorAll('path');
-    for (let i = 0; i < paths.length; i++) {
-      if (paths[i].id.includes('MI')) paths[i].setAttribute('fill', 'ORANGE');
-    }
+    stateValues.forEach((stateVal) => {
+      if (
+        [...paths].filter((path) => path.id.includes(stateVal.state)).length > 0
+      ) {
+        [...paths]
+          .filter((path) => path.id.includes(stateVal.state))[0]
+          .setAttribute(
+            'fill',
+            '#' +
+              componentToHex(
+                Math.ceil((stateVal.value / MAX_VALUE) * 200) + 55,
+              ) +
+              componentToHex(0) +
+              componentToHex(
+                255 - Math.ceil((stateVal.value / MAX_VALUE) * 255),
+              ),
+          );
+      }
+    });
   }
 
   return (

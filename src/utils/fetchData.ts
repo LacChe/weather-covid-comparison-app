@@ -85,7 +85,7 @@ export async function fetchCases(date: string) {
   const filteredCases = cases.filter(
     (c) => c.date === date && Object.keys(states).includes(c.state),
   );
-  let formattedCases: { value: number; state: string }[] = [];
+  let formattedCases: { value: number; state: string; date: string }[] = [];
 
   // calculate new cases and state abbreviations
   filteredCases.forEach((c) => {

@@ -15,12 +15,15 @@ export type sectionType = 'Cases' | 'Temperature';
 const Home: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<sectionType>('Cases');
   const [date, setDate] = useState<string>('');
+  const [stateValues, setStateValues] = useState<
+    { value: number; state: string; date: string }[]
+  >([]);
 
   useEffect(() => {
     async function fetchData() {
       switch (selectedSection) {
         case 'Cases':
-          console.log(await fetchCases(date));
+          setStateValues(await fetchCases(date));
           break;
         case 'Temperature':
           fetchTemperature(date);
@@ -42,7 +45,7 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <StatesMap />
+        <StatesMap stateValues={stateValues} />
         <Controls
           selectedSection={selectedSection}
           setSelectedSection={setSelectedSection}
