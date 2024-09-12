@@ -1,4 +1,4 @@
-// import { Preferences } from '@capacitor/preferences';
+import { Preferences } from '@capacitor/preferences';
 
 const states: {
   [key: string]: string;
@@ -63,6 +63,8 @@ const states: {
 };
 
 let cases: { date: string; state: string; cases: number }[] = [];
+let temperatures: { date: string; state: string; value: number }[] = [];
+const TEMPERATURE_KEY = 'TEMPERATURES';
 
 export async function fetchCases(date: string) {
   if (cases.length === 0) {
@@ -111,12 +113,38 @@ export async function fetchCases(date: string) {
 }
 
 export async function fetchTemperature(date: string) {
-  // check storage
-  // get from storage or application
-  // save to storage
-
-  // const CASES_KEY = 'Cases';
-  // await Preferences.get({ key: CASES_KEY });
-  // Preferences.set({ key: CASES_KEY, value: data });
-  console.log('fetch temperature: ', date);
+  temperatures = JSON.parse(
+    (await Preferences.get({ key: TEMPERATURE_KEY })).value || '[]',
+  );
+  if (temperatures.filter((t) => t.date === date).length === 0) {
+    Object.keys(states).forEach(async (state) => {
+      await fetch(
+        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${state}/${date}/${date}?unitGroup=us&key=${
+          import.meta.env.VITE_WEATHER_KEY
+        }`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        },
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          temperatures.push({
+            value: data.days[0].temp,
+            state: states[state],
+            date: date,
+          });
+          Preferences.set({
+            key: TEMPERATURE_KEY,
+            value: JSON.stringify(temperatures),
+          });
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
+  }
+  return temperatures.filter((t) => t.date === date);
 }

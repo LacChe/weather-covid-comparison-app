@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           setStateValues(await fetchCases(date));
           break;
         case 'Temperature':
-          fetchTemperature(date);
+          setStateValues(await fetchTemperature(date));
           break;
       }
     }
