@@ -9,11 +9,7 @@ import {
   IonSegment,
   IonSegmentButton,
 } from '@ionic/react';
-import {
-  heart,
-  chevronBackOutline,
-  chevronForwardOutline,
-} from 'ionicons/icons';
+import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 import React, { useEffect } from 'react';
 import { sectionType } from '../pages/Home';
 
@@ -121,7 +117,10 @@ const Controls: React.FC<ControlsProps> = ({
   }
 
   return (
-    <div>
+    <div
+      className="ion-padding"
+      style={{ maxWidth: '500px', margin: '0 auto' }}
+    >
       {caseTemperatureToggle()}
       {datePicker()}
     </div>
