@@ -3,6 +3,7 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from '@ionic/react';
 import StatesMap from '../components/StatesMap';
@@ -18,6 +19,7 @@ const Home: React.FC = () => {
   const [stateValues, setStateValues] = useState<
     { value: number; state: string; date: string }[]
   >([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,7 +28,7 @@ const Home: React.FC = () => {
           setStateValues(await fetchCases(date));
           break;
         case 'Temperature':
-          setStateValues(await fetchTemperature(date));
+          setStateValues(await fetchTemperature(date, setIsOpen));
           break;
       }
     }
@@ -52,6 +54,13 @@ const Home: React.FC = () => {
           date={date}
           setDate={setDate}
         />
+        <IonToast
+          isOpen={isOpen}
+          color="danger"
+          message="Weather API capacity reached"
+          onDidDismiss={() => setIsOpen(false)}
+          duration={5000}
+        ></IonToast>
       </IonContent>
     </IonPage>
   );

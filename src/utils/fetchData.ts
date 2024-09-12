@@ -112,7 +112,7 @@ export async function fetchCases(date: string) {
   return formattedCases;
 }
 
-export async function fetchTemperature(date: string) {
+export async function fetchTemperature(date: string, setIsOpen: any) {
   temperatures = JSON.parse(
     (await Preferences.get({ key: TEMPERATURE_KEY })).value || '[]',
   );
@@ -129,10 +129,15 @@ export async function fetchTemperature(date: string) {
           },
         },
       )
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 429) {
+            setIsOpen(true);
+          }
+          return response.json();
+        })
         .then((data) => {
           temperatures.push({
-            value: data.days[0].temp,
+            value: data?.days[0].temp,
             state: states[state],
             date: date,
           });
